@@ -1,24 +1,35 @@
+import 'package:basketball/cubit/counter_State.dart';
+import 'package:basketball/cubit/counter_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(Basket());
 }
 
-class Basket extends StatefulWidget {
+class Basket extends StatelessWidget {
   @override
-  State<Basket> createState() => _BasketState();
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          CounterCubit(), // all data change from this cubit state
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
+      ),
+    );
+  }
 }
 
-class _BasketState extends State<Basket> {
-  int PointA = 0;
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  int PointB = 0;
+
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return BlocConsumer<CounterCubit, CounterState>(builder: (context, state) {
+      return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.orange,
           title: const Text('Points Counter'),
@@ -43,7 +54,7 @@ class _BasketState extends State<Basket> {
                         ),
                       ),
                       Text(
-                        '$PointA',
+                        '${BlocProvider.of<CounterCubit>(context).PointA}',
                         style: TextStyle(
                           fontSize: 150,
                           fontWeight: FontWeight.bold,
@@ -55,9 +66,8 @@ class _BasketState extends State<Basket> {
                           maximumSize: Size(160, 50),
                         ),
                         onPressed: () {
-                          setState(() {
-                            PointA++;
-                          });
+                          BlocProvider.of<CounterCubit>(context)
+                              .TeamIncrement(team: 'A', buttonNumber: 1);
                         },
                         child: const Text(
                           'Add 1 Point',
@@ -73,9 +83,8 @@ class _BasketState extends State<Basket> {
                           maximumSize: Size(160, 50),
                         ),
                         onPressed: () {
-                          setState(() {
-                            PointA = PointA + 2;
-                          });
+                          BlocProvider.of<CounterCubit>(context)
+                              .TeamIncrement(team: 'A', buttonNumber: 2);
                         },
                         child: const Text(
                           'Add 2 Point',
@@ -91,9 +100,8 @@ class _BasketState extends State<Basket> {
                           maximumSize: Size(160, 50),
                         ),
                         onPressed: () {
-                          setState(() {
-                            PointA = PointA + 3;
-                          });
+                          BlocProvider.of<CounterCubit>(context)
+                              .TeamIncrement(team: 'A', buttonNumber: 3);
                         },
                         child: const Text(
                           'Add 3 Point',
@@ -127,7 +135,7 @@ class _BasketState extends State<Basket> {
                         ),
                       ),
                       Text(
-                        '$PointB',
+                        '${BlocProvider.of<CounterCubit>(context).PointB}',
                         style: TextStyle(
                           fontSize: 150,
                           fontWeight: FontWeight.bold,
@@ -139,9 +147,8 @@ class _BasketState extends State<Basket> {
                           maximumSize: Size(160, 50),
                         ),
                         onPressed: () {
-                          setState(() {
-                            PointB++;
-                          });
+                          BlocProvider.of<CounterCubit>(context)
+                              .TeamIncrement(team: 'B', buttonNumber: 1);
                         },
                         child: const Text(
                           'Add 1 Point',
@@ -157,9 +164,8 @@ class _BasketState extends State<Basket> {
                           maximumSize: Size(160, 50),
                         ),
                         onPressed: () {
-                          setState(() {
-                            PointB = PointB + 2;
-                          });
+                          BlocProvider.of<CounterCubit>(context)
+                              .TeamIncrement(team: 'B', buttonNumber: 2);
                         },
                         child: const Text(
                           'Add 2 Point',
@@ -175,9 +181,8 @@ class _BasketState extends State<Basket> {
                           maximumSize: Size(160, 50),
                         ),
                         onPressed: () {
-                          setState(() {
-                            PointB = PointB + 3;
-                          });
+                          BlocProvider.of<CounterCubit>(context)
+                              .TeamIncrement(team: 'B', buttonNumber: 3);
                         },
                         child: const Text(
                           'Add 3 Point',
@@ -198,10 +203,10 @@ class _BasketState extends State<Basket> {
                 maximumSize: Size(160, 50),
               ),
               onPressed: () {
-                setState(() {
-                  PointA=0;
-                  PointB = 0 ;
-                });
+                BlocProvider.of<CounterCubit>(context)
+                    .TeamIncrement(team: 'A', buttonNumber: 0);
+                BlocProvider.of<CounterCubit>(context)
+                    .TeamIncrement(team: 'B', buttonNumber: 0);
               },
               child: const Text(
                 'Reset',
@@ -213,7 +218,11 @@ class _BasketState extends State<Basket> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    }, listener: (context, state) {
+      if (state is counterAIncrementState) {
+      } else {
+      }
+    });
   }
 }
